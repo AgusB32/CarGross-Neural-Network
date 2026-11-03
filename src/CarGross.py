@@ -28,17 +28,12 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 if SRC_DIR not in sys.path:
     sys.path.insert(0, SRC_DIR)
 
+from preparar_datos import calcular_perfiles_riasec
+
 N_BITS = 110  # 11 variables psicometricas RIASEC/aptitud x 10 bines discretos (v1..v10)
 
-# Perfiles teoricos RIASEC (escala de bines 1..10 en las 11 variables) para validacion externa
-PERFILES_RIASEC = {
-    "Ingenieria de Software (Software Engineer)": np.array([8.36, 8.30, 5.47, 4.00, 5.50, 3.29, 8.52, 3.42, 3.48, 3.50, 7.03]),
-    "Ciencia de Datos (Data Scientist)":          np.array([9.14, 8.32, 3.98, 3.99, 5.48, 3.44, 8.89, 3.52, 3.53, 3.39, 7.96]),
-    "Medicina y Salud (Doctor)":                  np.array([8.28, 9.45, 4.01, 4.04, 3.98, 3.56, 7.98, 3.67, 7.97, 3.48, 3.35]),
-    "Contaduria y Finanzas (Accountant)":         np.array([8.94, 8.37, 4.00, 4.03, 5.51, 3.50, 3.44, 3.59, 3.44, 3.55, 8.85]),
-    "Emprendimiento y Gestion (Entrepreneur)":    np.array([8.27, 8.37, 3.92, 5.52, 3.95, 6.92, 3.48, 3.61, 3.46, 8.97, 3.64]),
-    "Docencia y Educacion (Teacher)":             np.array([8.24, 8.28, 3.98, 5.48, 3.94, 3.44, 3.54, 7.10, 8.86, 3.58, 3.50]),
-}
+# Perfiles teoricos RIASEC (promedio de bines 1..10 por carrera sobre career_data.csv) para validacion externa
+PERFILES_RIASEC = calcular_perfiles_riasec()
 PESOS_VAR = np.array([1.5, 1.5, 4.0, 3.0, 3.0, 2.0, 2.5, 2.0, 2.5, 2.5, 2.5])
 
 MAN_PAGE = """
@@ -328,7 +323,7 @@ def evaluar_dataset(ruta_csv, rho, L=2.0, epocas=50, salida_csv=None):
     for r in sorted(resumen, key=lambda x: (-x["alumnos"], x["cat"]))[:20]:
         print(f"  Cat_{r['cat']:02d}   | {r['alumnos']:7d} | {r['porc']:6.1f}% | {r['coh']:6.1f}% | {r['vocacion']:<42} | {r['rasgos']}")
     if len(resumen) > 20:
-        print(f"  ... ({len(resumen) - 20} micro-clusters adicionales de 1 alumno) ...")
+        print(f"  ... ({len(resumen) - 20} clusters adicionales de 1 alumno) ...")
     print("=" * 107)
 
     if salida_csv:
