@@ -266,29 +266,6 @@ def cargar_csv_binario(ruta):
     return mat_int[sumas > 0], list(df.columns), idx_validos, idx_nulos, len(mat_int)
 
 
-EJES_VOCACIONALES = np.array([
-    "Matematico", "Cientifico", "Programacion", "Comunicativo", "Logico",
-    "Practico", "Investigador", "Creativo", "Social", "Liderazgo", "Estructurado",
-])
-_MAT_RIASEC = np.array(list(PERFILES_RIASEC.values()))
-MEDIA_RIASEC = _MAT_RIASEC.mean(axis=0)
-STD_RIASEC = _MAT_RIASEC.std(axis=0) + 0.5
-
-
-def _especializar_vocacion(vocacion_key, bines_td):
-    """Extrae algebraicamente del vector T_Ji el eje dominante y el rasgo diferencial."""
-    voc_base = vocacion_key.split(" (")[0]
-    if np.sum(bines_td > 0) < 2:
-        return voc_base
-    z_global = (bines_td - MEDIA_RIASEC) / STD_RIASEC
-    s1 = np.where(bines_td > 0, z_global, -999.0)
-    i1 = int(np.argmax(s1))
-    s2 = np.where(bines_td > 0, 0.6 * z_global + 0.4 * (bines_td - PERFILES_RIASEC[vocacion_key]), -999.0)
-    s2[i1] = -999.0
-    i2 = int(np.argmax(s2))
-    return f"{voc_base} ({EJES_VOCACIONALES[i1]} - {EJES_VOCACIONALES[i2]})"
-
-
 def interpretar_cluster(t_j, columnas, sub_x):
     """Decodifica los bines activos del prototipo T_Ji y calcula su coherencia RIASEC."""
     activos = [columnas[i] for i in np.where(t_j >= 0.5)[0]]
@@ -297,13 +274,11 @@ def interpretar_cluster(t_j, columnas, sub_x):
 
     # Nivel promedio (1..10) por variable para contrastar con la matriz teorica RIASEC
     niveles = np.zeros(11)
-    bines_td = np.zeros(11)
     escala = np.arange(1, 11, dtype=float)
     for v in range(11):
         seg = t_j[v * 10 : (v + 1) * 10]
         if seg.sum() > 0:
-            bines_td[v] = np.dot(seg, escala) / seg.sum()
-            niveles[v] = bines_td[v]
+            niveles[v] = np.dot(seg, escala) / seg.sum()
         else:
             seg_c = sub_x[:, v * 10 : (v + 1) * 10].mean(axis=0)
             niveles[v] = np.dot(seg_c, escala) / max(1e-9, seg_c.sum())
@@ -312,9 +287,8 @@ def interpretar_cluster(t_j, columnas, sub_x):
         carrera: float(np.sqrt(np.sum(PESOS_VAR * (niveles - proto) ** 2) / PESOS_VAR.sum()))
         for carrera, proto in PERFILES_RIASEC.items()
     }
-    vocacion_base = min(dists, key=dists.get)
-    vocacion = _especializar_vocacion(vocacion_base, bines_td)
-    coherencia = round(float(np.clip((1.0 - dists[vocacion_base] / 4.5) * 100.0, 50.0, 99.9)), 1)
+    vocacion = min(dists, key=dists.get)
+    coherencia = round(float(np.clip((1.0 - dists[vocacion] / 4.5) * 100.0, 50.0, 99.9)), 1)
     return rasgos, vocacion, coherencia
 
 
@@ -342,20 +316,20 @@ def evaluar_dataset(ruta_csv, rho, L=2.0, epocas=50, salida_csv=None):
     media_bits = float(np.mean([r["bits"] for r in resumen])) if resumen else 0.0
     coh_global = float(np.sum([r["coh"] * r["alumnos"] for r in resumen]) / len(X))
 
-    print("\n" + "=" * 113)
+    print("\n" + "=" * 107)
     print(f"  REPORTE EXPERIMENTAL ART1 | Dataset: {os.path.basename(ruta_csv)} | Vigilancia rho = {rho:.2f}")
-    print("=" * 113)
+    print("=" * 107)
     print(f"  Registros leidos: {total} | Nulos filtrados: {len(idx_nul)} | Procesados: {len(X)} | Epocas: {ep_usadas}")
     print(f"  Categorias creadas en F2: {red.n_categorias} | Media ||T_J||_1: {media_bits:.1f}/11 bits | Coherencia RIASEC: {coh_global:.1f}%")
-    print("-" * 113)
-    print(f"  {'Cluster':<8} | {'Alumnos':>7} | {'% Total':>7} | {'Coher.':>7} | {'Orientacion Vocacional (Subperfil)':<48} | {'Prototipo T_Ji'}")
-    print("-" * 113)
+    print("-" * 107)
+    print(f"  {'Cluster':<8} | {'Alumnos':>7} | {'% Total':>7} | {'Coher.':>7} | {'Orientacion Vocacional':<42} | {'Prototipo T_Ji'}")
+    print("-" * 107)
 
     for r in sorted(resumen, key=lambda x: (-x["alumnos"], x["cat"]))[:20]:
-        print(f"  Cat_{r['cat']:02d}   | {r['alumnos']:7d} | {r['porc']:6.1f}% | {r['coh']:6.1f}% | {r['vocacion']:<48} | {r['rasgos']}")
+        print(f"  Cat_{r['cat']:02d}   | {r['alumnos']:7d} | {r['porc']:6.1f}% | {r['coh']:6.1f}% | {r['vocacion']:<42} | {r['rasgos']}")
     if len(resumen) > 20:
         print(f"  ... ({len(resumen) - 20} micro-clusters adicionales de 1 alumno) ...")
-    print("=" * 113)
+    print("=" * 107)
 
     if salida_csv:
         mapa_voc = {r["cat"]: r["vocacion"] for r in resumen}
