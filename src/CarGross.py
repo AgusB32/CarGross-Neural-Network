@@ -328,7 +328,7 @@ def evaluar_dataset(ruta_csv, rho, L=2.0, epocas=50, salida_csv=None):
     for r in sorted(resumen, key=lambda x: (-x["alumnos"], x["cat"]))[:20]:
         print(f"  Cat_{r['cat']:02d}   | {r['alumnos']:7d} | {r['porc']:6.1f}% | {r['coh']:6.1f}% | {r['vocacion']:<42} | {r['rasgos']}")
     if len(resumen) > 20:
-        print(f"  ... ({len(resumen) - 20} micro-clusters adicionales de 1 alumno) ...")
+        print(f"  ... ({len(resumen) - 20} clusters adicionales de 1 alumno) ...")
     print("=" * 107)
 
     if salida_csv:

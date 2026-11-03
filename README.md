@@ -95,8 +95,6 @@ RedNeuronalNew/
 ├── src/
 │   ├── CarGross.py                     # Código principal de la red ART1 y comandos de consola
 │   └── preparar_datos.py               # Script que convierte los puntajes a 110 bits y crea los CSV
-├── notebooks/
-│   └── simulacion_calibracion_rho.py   # Pruebas con distintos valores de vigilancia (rho)
 ├── data/
 │   ├── career_data.csv                 # Dataset vocacional original (2400 estudiantes)
 │   ├── dataset_A.csv                   # Dataset de uso A binarizado (60 alumnos x 110 bits)
