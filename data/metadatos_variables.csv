@@ -1,0 +1,111 @@
+Indice_Bit;Columna_Binaria;Variable_Original;Bin;Intervalo;Regla_Escalamiento;Valores;Descripcion
+1;Math_v1;Math_Score;v1;[0, 1);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+2;Math_v2;Math_Score;v2;[1, 2);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+3;Math_v3;Math_Score;v3;[2, 3);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+4;Math_v4;Math_Score;v4;[3, 4);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+5;Math_v5;Math_Score;v5;[4, 5);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+6;Math_v6;Math_Score;v6;[5, 6);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+7;Math_v7;Math_Score;v7;[6, 7);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+8;Math_v8;Math_Score;v8;[7, 8);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+9;Math_v9;Math_Score;v9;[8, 9);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+10;Math_v10;Math_Score;v10;[9, 10];Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en matematica (escala 1-100 -> 1-10)
+11;Science_v1;Science_Score;v1;[0, 1);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+12;Science_v2;Science_Score;v2;[1, 2);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+13;Science_v3;Science_Score;v3;[2, 3);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+14;Science_v4;Science_Score;v4;[3, 4);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+15;Science_v5;Science_Score;v5;[4, 5);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+16;Science_v6;Science_Score;v6;[5, 6);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+17;Science_v7;Science_Score;v7;[6, 7);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+18;Science_v8;Science_Score;v8;[7, 8);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+19;Science_v9;Science_Score;v9;[8, 9);Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+20;Science_v10;Science_Score;v10;[9, 10];Dividir por 10 y mapear a [0,1)..[9,10];0 o 1;Rendimiento en ciencias (escala 1-100 -> 1-10)
+21;Programming_v1;Programming_Skill;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+22;Programming_v2;Programming_Skill;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+23;Programming_v3;Programming_Skill;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+24;Programming_v4;Programming_Skill;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+25;Programming_v5;Programming_Skill;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+26;Programming_v6;Programming_Skill;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+27;Programming_v7;Programming_Skill;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+28;Programming_v8;Programming_Skill;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+29;Programming_v9;Programming_Skill;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+30;Programming_v10;Programming_Skill;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;Habilidad de programacion
+31;Communication_v1;Communication_Skill;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+32;Communication_v2;Communication_Skill;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+33;Communication_v3;Communication_Skill;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+34;Communication_v4;Communication_Skill;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+35;Communication_v5;Communication_Skill;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+36;Communication_v6;Communication_Skill;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+37;Communication_v7;Communication_Skill;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+38;Communication_v8;Communication_Skill;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+39;Communication_v9;Communication_Skill;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+40;Communication_v10;Communication_Skill;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;Capacidad de comunicacion
+41;Logical_v1;Logical_Ability;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+42;Logical_v2;Logical_Ability;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+43;Logical_v3;Logical_Ability;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+44;Logical_v4;Logical_Ability;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+45;Logical_v5;Logical_Ability;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+46;Logical_v6;Logical_Ability;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+47;Logical_v7;Logical_Ability;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+48;Logical_v8;Logical_Ability;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+49;Logical_v9;Logical_Ability;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+50;Logical_v10;Logical_Ability;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;Razonamiento logico
+51;R_v1;R_score;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+52;R_v2;R_score;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+53;R_v3;R_score;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+54;R_v4;R_score;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+55;R_v5;R_score;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+56;R_v6;R_score;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+57;R_v7;R_score;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+58;R_v8;R_score;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+59;R_v9;R_score;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+60;R_v10;R_score;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Realista (trabajo practico / tecnico)
+61;I_v1;I_score;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+62;I_v2;I_score;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+63;I_v3;I_score;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+64;I_v4;I_score;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+65;I_v5;I_score;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+66;I_v6;I_score;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+67;I_v7;I_score;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+68;I_v8;I_score;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+69;I_v9;I_score;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+70;I_v10;I_score;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Investigador (analitico / cientifico)
+71;A_v1;A_score;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+72;A_v2;A_score;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+73;A_v3;A_score;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+74;A_v4;A_score;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+75;A_v5;A_score;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+76;A_v6;A_score;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+77;A_v7;A_score;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+78;A_v8;A_score;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+79;A_v9;A_score;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+80;A_v10;A_score;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Artistico (creativo / diseno)
+81;S_v1;S_score;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+82;S_v2;S_score;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+83;S_v3;S_score;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+84;S_v4;S_score;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+85;S_v5;S_score;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+86;S_v6;S_score;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+87;S_v7;S_score;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+88;S_v8;S_score;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+89;S_v9;S_score;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+90;S_v10;S_score;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Social (docencia / salud / servicio)
+91;E_v1;E_score;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+92;E_v2;E_score;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+93;E_v3;E_score;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+94;E_v4;E_score;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+95;E_v5;E_score;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+96;E_v6;E_score;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+97;E_v7;E_score;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+98;E_v8;E_score;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+99;E_v9;E_score;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+100;E_v10;E_score;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Emprendedor (liderazgo / negocios)
+101;C_v1;C_score;v1;[0, 1);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+102;C_v2;C_score;v2;[1, 2);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+103;C_v3;C_score;v3;[2, 3);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+104;C_v4;C_score;v4;[3, 4);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+105;C_v5;C_score;v5;[4, 5);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+106;C_v6;C_score;v6;[5, 6);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+107;C_v7;C_score;v7;[6, 7);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+108;C_v8;C_score;v8;[7, 8);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+109;C_v9;C_score;v9;[8, 9);Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
+110;C_v10;C_score;v10;[9, 10];Mapeo directo a [0,1)..[9,10];0 o 1;RIASEC Convencional (organizacion / contable)
