@@ -130,7 +130,7 @@ Todos los datos y metadatos del proyecto están guardados en **formato CSV puro*
 
 ### 1. Ejecución individual sobre un archivo
 ```bash
-python src/CarGross.py <archivo.csv> [--rho RHO] [--L L] [--epocas E] [-o SALIDA.csv]
+python src/CarGross.py <archivo.csv> [--rho RHO]
 ```
 Es el modo principal para clasificar un dataset puntual con los parámetros deseados:
 - **`<archivo.csv>`:** La ruta al CSV binario de 110 bits (ej. `data/dataset_A.csv` o `data/dataset_B.csv`).

@@ -44,7 +44,7 @@ NOMBRE
     CarGross.py - Clasificador Vocacional No Supervisado basado en Red ART1
 
 SINOPSIS
-    python src/CarGross.py <archivo.csv> [--rho RHO] [--L L] [--epocas E] [-o SALIDA.csv]
+    python src/CarGross.py <archivo.csv> [--rho RHO]
     python src/CarGross.py --demo
     python src/CarGross.py --experimento
     python src/CarGross.py --preparar
