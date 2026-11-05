@@ -50,13 +50,13 @@ Cuando un alumno entra a la red, pasan tres cosas:
 - **Agrupamiento automático sin supervisión:** Crea la cantidad necesaria de clústeres de forma dinámica según qué tan exigente sea el parámetro de vigilancia `rho`, sin que haya que definir un número fijo de grupos de antemano (a diferencia de *K-Means*).
 - **Aprende sin borrar lo anterior:** Si aparece un perfil vocacional completamente nuevo, la red abre una categoría nueva sin destruir ni olvidar los grupos que ya había formado.
 - **Binarización y partición de datos incluidas (`src/preparar_datos.py`):** Toma el dataset original, lleva las 11 variables a una escala del 1 al 10, las transforma en vectores de 110 bits y genera dos datasets independientes listos para usar (`dataset_A.csv` y `dataset_B.csv`).
-- **Interpretación vocacional de cada grupo:** Una vez que la red termina de agrupar, el programa analiza el prototipo $T_{Ji}$ de cada clúster y muestra qué rasgos exactos tienen en común los alumnos de ese grupo y a qué orientación vocacional del modelo RIASEC se acerca más.
+- **Interpretación de cada grupo (Prototipos $T_{Ji}$):** Una vez que la red termina de agrupar, el programa analiza el prototipo $T_{Ji}$ de cada clúster y muestra qué rasgos exactos tienen en común el 100% de los alumnos de ese grupo.
 - **Validación de errores y ayuda automática (`--man`):** Si se ejecuta el programa sin parámetros, con un archivo que no existe, con formato prohibido (como `.json`), con valores que no sean `0` o `1`, o con filas llenas de ceros (vectores nulos), el programa avisa cuál fue el problema y muestra automáticamente en pantalla el manual de usuario completo.
 
 ### 2.2 Limitaciones (¿Qué límites tiene?)
 - **Solo acepta entradas binarias (`0` y `1`):** El modelo ART1 original trabaja únicamente con unos y ceros. Por eso cualquier puntaje numérico (como una nota de 0 a 100) debe pasar primero por el paso de binarización por niveles (`v1` a `v10`).
 - **Si `rho` es muy bajo, los prototipos pierden detalle:** Como el prototipo $T_{Ji}$ guarda la intersección (`AND`) de todos los alumnos del grupo, si se pone un `rho` demasiado bajo (por ejemplo `0.20`), entran al mismo grupo alumnos muy distintos entre sí y se van apagando bits en `T_Ji`, quedando pocos rasgos en común.
-- **El orden de las filas influye levemente:** Como la red lee a los estudiantes uno por uno en orden secuencial, cambiar el orden de las filas del CSV puede cambiar ligeramente qué alumno inaugura cada grupo, aunque la coherencia general del agrupamiento se mantiene estable.
+- **El orden de las filas influye levemente:** Como la red lee a los estudiantes uno por uno en orden secuencial, cambiar el orden de las filas del CSV puede cambiar ligeramente qué alumno inaugura cada grupo, aunque la consistencia general del agrupamiento se mantiene estable.
 - **Uso exclusivo por consola (CLI):** Siguiendo las pautas de la cátedra, todas las pruebas, reportes y ayudas se ejecutan por terminal, sin interfaz gráfica.
 
 ---
@@ -137,7 +137,7 @@ Es el modo principal para clasificar un dataset puntual con los parámetros dese
 - **`--rho RHO` (o `-r`):** El nivel de vigilancia $\rho \in (0, 1]$ (por defecto `0.60`). Controla qué tan estricta es la red para admitir alumnos en un mismo clúster.
 - **`--L L`:** Parámetro de elección *Bottom-Up* (por defecto `2.0`, el valor canónico de Lippmann/Lau para $B_{ij}$).
 - **`--epocas E` (o `-e`):** Cantidad máxima de pasadas sobre los datos hasta converger (por defecto `50`, aunque suele estabilizar en 2 o 3 épocas).
-- **`-o SALIDA.csv` (opcional):** Guarda en un nuevo archivo CSV la lista de cada alumno con su clúster asignado, la similitud $\frac{\|S\|_1}{\|X\|_1}$ y su orientación vocacional RIASEC calculada.
+- **`-o SALIDA.csv` (opcional):** Guarda en un nuevo archivo CSV la lista de cada alumno con su clúster asignado y la similitud $\frac{\|S\|_1}{\|X\|_1}$.
 
 ### 2. Modo demostración
 ```bash
@@ -156,7 +156,7 @@ Ejecuta la batería de pruebas oficial exigida por la Sección 3 del TP:
   - $\rho = 0.30$ (Baja vigilancia — sub-clasificación / clústeres amplios).
   - $\rho = 0.60$ (Vigilancia intermedia — equilibrio óptimo).
   - $\rho = 0.85$ (Alta vigilancia — sobre-clasificación / micro-clústeres).
-- Al final imprime la tabla comparativa global consolidando cantidad de clústeres, promedio de bits en los prototipos $T_{Ji}$ y porcentaje de coherencia psicopedagógica.
+- Al final imprime la tabla comparativa global consolidando cantidad de clústeres, promedio de bits en los prototipos $T_{Ji}$.
 
 ### 4. Modo preparación de datos
 ```bash
@@ -181,7 +181,7 @@ Despliega en la terminal el manual de usuario completo estilo UNIX `man`:
 
 ### 6.1 Salida del Test Demo y Resultados sobre `dataset_A.csv` ($\rho = 0.60$)
 
-Al ejecutar `python src/CarGross.py --demo` (o `python src/CarGross.py data/dataset_A.csv --rho 0.60`), la red converge en **2 épocas**, formando **19 categorías** en $F_2$ con un promedio de **7.3 bits activos** por prototipo $T_{Ji}$ y una coherencia vocacional del **83.2%**:
+Al ejecutar `python src/CarGross.py --demo` (o `python src/CarGross.py data/dataset_A.csv --rho 0.60`), la red converge en **2 épocas**, formando **19 categorías** en $F_2$ con un promedio de **7.3 bits activos** por prototipo $T_{Ji}$:
 
 ```text
 ===============================================================================================
@@ -196,65 +196,65 @@ Al ejecutar `python src/CarGross.py --demo` (o `python src/CarGross.py data/data
   REPORTE EXPERIMENTAL ART1 | Dataset: dataset_A.csv | Vigilancia rho = 0.60
 ===========================================================================================================
   Registros leidos: 60 | Nulos filtrados: 0 | Procesados: 60 | Epocas: 2
-  Categorias creadas en F2: 19 | Media ||T_J||_1: 7.3/11 bits | Coherencia RIASEC: 83.2%
+  Categorias creadas en F2: 19 | Media ||T_J||_1: 7.3/11 bits
 -----------------------------------------------------------------------------------------------------------
-  Cluster  | Alumnos | % Total |  Coher. | Orientacion Vocacional                     | Prototipo T_Ji
+  Cluster  | Alumnos | % Total | Prototipo T_Ji
 -----------------------------------------------------------------------------------------------------------
-  Cat_00   |       4 |    6.7% |   85.2% | Contaduria y Finanzas (Accountant)         | T_Ji (7 bits): Math_v9, Logical_v6, R_v5, A_v4, S_v4, Communication_v3, E_v3
-  Cat_03   |       4 |    6.7% |   83.3% | Ciencia de Datos (Data Scientist)          | T_Ji (7 bits): Math_v10, I_v9, Science_v7, Programming_v5, Logical_v5, S_v4, Communication_v3
-  Cat_04   |       4 |    6.7% |   83.0% | Ciencia de Datos (Data Scientist)          | T_Ji (7 bits): Math_v10, Science_v9, I_v9, C_v9, Logical_v6, Programming_v5, Communication_v5
-  Cat_06   |       4 |    6.7% |   85.6% | Medicina y Salud (Doctor)                  | T_Ji (8 bits): Math_v9, Science_v9, I_v8, S_v7, Logical_v5, R_v4, A_v4, Communication_v3
-  Cat_13   |       4 |    6.7% |   83.4% | Ingenieria de Software (Software Engineer) | T_Ji (7 bits): I_v8, Logical_v6, Programming_v5, Communication_v4, S_v4, A_v2, E_v2
-  Cat_16   |       4 |    6.7% |   83.9% | Docencia y Educacion (Teacher)             | T_Ji (7 bits): Science_v10, S_v9, A_v7, Communication_v6, Programming_v3, Logical_v3, C_v3
-  Cat_01   |       3 |    5.0% |   84.7% | Contaduria y Finanzas (Accountant)         | T_Ji (7 bits): Math_v9, Science_v9, C_v8, Logical_v6, Programming_v4, A_v4, E_v2
-  Cat_02   |       3 |    5.0% |   86.1% | Contaduria y Finanzas (Accountant)         | T_Ji (7 bits): Math_v9, Logical_v6, Programming_v5, Communication_v5, I_v3, S_v3, E_v3
-  Cat_07   |       3 |    5.0% |   84.1% | Medicina y Salud (Doctor)                  | T_Ji (7 bits): Science_v9, I_v9, Math_v8, Logical_v5, R_v4, E_v4, Communication_v3
-  Cat_08   |       3 |    5.0% |   81.8% | Medicina y Salud (Doctor)                  | T_Ji (7 bits): Math_v9, Science_v9, I_v8, S_v8, Communication_v5, Logical_v3, E_v2
-  Cat_09   |       3 |    5.0% |   79.6% | Emprendimiento y Gestion (Entrepreneur)    | T_Ji (7 bits): E_v10, R_v6, A_v6, Communication_v5, I_v4, S_v4, C_v3
-  Cat_10   |       3 |    5.0% |   84.6% | Emprendimiento y Gestion (Entrepreneur)    | T_Ji (7 bits): E_v10, Math_v9, Communication_v6, R_v6, S_v4, Programming_v3, C_v3
-  Cat_11   |       3 |    5.0% |   85.1% | Emprendimiento y Gestion (Entrepreneur)    | T_Ji (7 bits): E_v10, Math_v8, Communication_v5, C_v5, Logical_v4, I_v4, S_v4
-  Cat_14   |       3 |    5.0% |   84.1% | Ingenieria de Software (Software Engineer) | T_Ji (7 bits): I_v10, Math_v9, Science_v7, Logical_v6, Programming_v5, S_v4, A_v3
-  Cat_15   |       3 |    5.0% |   81.9% | Ingenieria de Software (Software Engineer) | T_Ji (7 bits): Science_v8, Logical_v6, Programming_v5, Communication_v5, R_v5, S_v4, A_v3
-  Cat_17   |       3 |    5.0% |   86.2% | Docencia y Educacion (Teacher)             | T_Ji (7 bits): S_v9, Science_v8, A_v7, Communication_v6, Logical_v5, E_v4, Programming_v3
-  Cat_18   |       3 |    5.0% |   75.9% | Docencia y Educacion (Teacher)             | T_Ji (7 bits): S_v9, Communication_v6, R_v6, A_v6, E_v4, Programming_v3, I_v2
-  Cat_05   |       2 |    3.3% |   78.2% | Ciencia de Datos (Data Scientist)          | T_Ji (8 bits): Math_v10, I_v9, C_v8, Logical_v5, S_v5, Programming_v3, Communication_v3, A_v3
-  Cat_12   |       1 |    1.7% |   74.4% | Emprendimiento y Gestion (Entrepreneur)    | T_Ji (11 bits): Science_v10, E_v10, Math_v7, R_v7, Communication_v6, Logical_v5, I_v4, Programming_v3, A_v3, S_v3, C_v1
+  Cat_00   |       4 |    6.7% | T_Ji (7 bits): Math_v9, Logical_v6, R_v5, A_v4, S_v4, Communication_v3, E_v3
+  Cat_03   |       4 |    6.7% | T_Ji (7 bits): Math_v10, I_v9, Science_v7, Programming_v5, Logical_v5, S_v4, Communication_v3
+  Cat_04   |       4 |    6.7% | T_Ji (7 bits): Math_v10, Science_v9, I_v9, C_v9, Logical_v6, Programming_v5, Communication_v5
+  Cat_06   |       4 |    6.7% | T_Ji (8 bits): Math_v9, Science_v9, I_v8, S_v7, Logical_v5, R_v4, A_v4, Communication_v3
+  Cat_13   |       4 |    6.7% | T_Ji (7 bits): I_v8, Logical_v6, Programming_v5, Communication_v4, S_v4, A_v2, E_v2
+  Cat_16   |       4 |    6.7% | T_Ji (7 bits): Science_v10, S_v9, A_v7, Communication_v6, Programming_v3, Logical_v3, C_v3
+  Cat_01   |       3 |    5.0% | T_Ji (7 bits): Math_v9, Science_v9, C_v8, Logical_v6, Programming_v4, A_v4, E_v2
+  Cat_02   |       3 |    5.0% | T_Ji (7 bits): Math_v9, Logical_v6, Programming_v5, Communication_v5, I_v3, S_v3, E_v3
+  Cat_07   |       3 |    5.0% | T_Ji (7 bits): Science_v9, I_v9, Math_v8, Logical_v5, R_v4, E_v4, Communication_v3
+  Cat_08   |       3 |    5.0% | T_Ji (7 bits): Math_v9, Science_v9, I_v8, S_v8, Communication_v5, Logical_v3, E_v2
+  Cat_09   |       3 |    5.0% | T_Ji (7 bits): E_v10, R_v6, A_v6, Communication_v5, I_v4, S_v4, C_v3
+  Cat_10   |       3 |    5.0% | T_Ji (7 bits): E_v10, Math_v9, Communication_v6, R_v6, S_v4, Programming_v3, C_v3
+  Cat_11   |       3 |    5.0% | T_Ji (7 bits): E_v10, Math_v8, Communication_v5, C_v5, Logical_v4, I_v4, S_v4
+  Cat_14   |       3 |    5.0% | T_Ji (7 bits): I_v10, Math_v9, Science_v7, Logical_v6, Programming_v5, S_v4, A_v3
+  Cat_15   |       3 |    5.0% | T_Ji (7 bits): Science_v8, Logical_v6, Programming_v5, Communication_v5, R_v5, S_v4, A_v3
+  Cat_17   |       3 |    5.0% | T_Ji (7 bits): S_v9, Science_v8, A_v7, Communication_v6, Logical_v5, E_v4, Programming_v3
+  Cat_18   |       3 |    5.0% | T_Ji (7 bits): S_v9, Communication_v6, R_v6, A_v6, E_v4, Programming_v3, I_v2
+  Cat_05   |       2 |    3.3% | T_Ji (8 bits): Math_v10, I_v9, C_v8, Logical_v5, S_v5, Programming_v3, Communication_v3, A_v3
+  Cat_12   |       1 |    1.7% | T_Ji (11 bits): Science_v10, E_v10, Math_v7, R_v7, Communication_v6, Logical_v5, I_v4, Programming_v3, A_v3, S_v3, C_v1
 ===========================================================================================================
 ```
 
 ### 6.2 Resultados sobre `dataset_B.csv` ($\rho = 0.60$)
 
-Al ejecutar `python src/CarGross.py data/dataset_B.csv --rho 0.60` sobre el segundo conjunto de 60 alumnos independientes, la red también converge en **2 épocas**, formando **22 categorías** en $F_2$ con un promedio de **7.8 bits activos** por prototipo $T_{Ji}$ y una coherencia vocacional del **82.7%**:
+Al ejecutar `python src/CarGross.py data/dataset_B.csv --rho 0.60` sobre el segundo conjunto de 60 alumnos independientes, la red también converge en **2 épocas**, formando **22 categorías** en $F_2$ con un promedio de **7.8 bits activos** por prototipo $T_{Ji}$:
 
 ```text
 ===========================================================================================================
   REPORTE EXPERIMENTAL ART1 | Dataset: dataset_B.csv | Vigilancia rho = 0.60
 ===========================================================================================================
   Registros leidos: 60 | Nulos filtrados: 0 | Procesados: 60 | Epocas: 2
-  Categorias creadas en F2: 22 | Media ||T_J||_1: 7.8/11 bits | Coherencia RIASEC: 82.7%
+  Categorias creadas en F2: 22 | Media ||T_J||_1: 7.8/11 bits
 -----------------------------------------------------------------------------------------------------------
-  Cluster  | Alumnos | % Total |  Coher. | Orientacion Vocacional                     | Prototipo T_Ji
+  Cluster  | Alumnos | % Total | Prototipo T_Ji
 -----------------------------------------------------------------------------------------------------------
-  Cat_04   |       4 |    6.7% |   85.7% | Ciencia de Datos (Data Scientist)          | T_Ji (7 bits): Math_v9, C_v9, Science_v7, Logical_v5, A_v4, Programming_v3, E_v3
-  Cat_05   |       4 |    6.7% |   82.6% | Ciencia de Datos (Data Scientist)          | T_Ji (7 bits): I_v10, Math_v9, Science_v8, Logical_v6, S_v4, A_v3, R_v2
-  Cat_15   |       4 |    6.7% |   86.9% | Ingenieria de Software (Software Engineer) | T_Ji (7 bits): Science_v7, Programming_v6, Logical_v5, S_v4, E_v4, Communication_v3, A_v3
-  Cat_00   |       3 |    5.0% |   82.1% | Contaduria y Finanzas (Accountant)         | T_Ji (7 bits): Math_v9, Logical_v6, S_v4, Programming_v3, Communication_v3, I_v3, E_v2
-  Cat_01   |       3 |    5.0% |   79.3% | Contaduria y Finanzas (Accountant)         | T_Ji (7 bits): Math_v9, Science_v9, C_v9, Logical_v6, Programming_v5, Communication_v3, E_v2
-  Cat_02   |       3 |    5.0% |   78.6% | Contaduria y Finanzas (Accountant)         | T_Ji (8 bits): Math_v9, C_v9, Science_v8, Logical_v6, Programming_v5, Communication_v3, I_v3, E_v1
-  Cat_07   |       3 |    5.0% |   83.6% | Medicina y Salud (Doctor)                  | T_Ji (7 bits): Science_v9, Math_v8, Programming_v5, E_v5, R_v4, A_v3, C_v3
-  Cat_08   |       3 |    5.0% |   83.4% | Medicina y Salud (Doctor)                  | T_Ji (7 bits): Science_v9, S_v9, Math_v7, Programming_v4, Communication_v3, Logical_v3, C_v3
-  Cat_09   |       3 |    5.0% |   82.3% | Medicina y Salud (Doctor)                  | T_Ji (7 bits): Science_v9, S_v8, R_v4, Programming_v3, Communication_v3, Logical_v3, E_v3
-  Cat_11   |       3 |    5.0% |   85.2% | Emprendimiento y Gestion (Entrepreneur)    | T_Ji (7 bits): Math_v9, R_v8, Programming_v4, S_v4, C_v4, Logical_v3, A_v3
-  Cat_12   |       3 |    5.0% |   82.8% | Emprendimiento y Gestion (Entrepreneur)    | T_Ji (7 bits): Math_v8, R_v8, S_v4, C_v4, Programming_v3, Logical_v3, A_v2
-  Cat_13   |       3 |    5.0% |   90.4% | Emprendimiento y Gestion (Entrepreneur)    | T_Ji (7 bits): Math_v8, Communication_v5, Programming_v4, A_v4, S_v4, C_v4, I_v3
-  Cat_16   |       3 |    5.0% |   75.8% | Ingenieria de Software (Software Engineer) | T_Ji (7 bits): C_v9, Math_v8, Science_v7, A_v6, Logical_v5, R_v4, Communication_v3
-  Cat_17   |       3 |    5.0% |   78.9% | Ingenieria de Software (Software Engineer) | T_Ji (7 bits): Science_v9, Math_v8, Programming_v6, Communication_v5, Logical_v5, R_v5, E_v4
-  Cat_18   |       3 |    5.0% |   83.0% | Docencia y Educacion (Teacher)             | T_Ji (7 bits): S_v10, Science_v8, Math_v7, Programming_v5, Communication_v5, Logical_v3, I_v3
-  Cat_19   |       3 |    5.0% |   86.3% | Docencia y Educacion (Teacher)             | T_Ji (7 bits): Science_v8, S_v8, Math_v7, A_v7, Communication_v5, Programming_v3, I_v3
-  Cat_20   |       3 |    5.0% |   82.1% | Docencia y Educacion (Teacher)             | T_Ji (7 bits): S_v10, Math_v8, Programming_v5, Communication_v5, R_v5, E_v4, Logical_v3
-  Cat_06   |       2 |    3.3% |   79.5% | Ciencia de Datos (Data Scientist)          | T_Ji (8 bits): I_v10, Math_v9, C_v9, Science_v7, Logical_v6, S_v5, A_v4, R_v3
-  Cat_03   |       1 |    1.7% |   75.8% | Contaduria y Finanzas (Accountant)         | T_Ji (11 bits): Math_v9, C_v9, Science_v7, S_v6, Logical_v5, Programming_v4, Communication_v4, R_v4, I_v3, A_v2, E_v2
-  Cat_10   |       1 |    1.7% |   84.8% | Medicina y Salud (Doctor)                  | T_Ji (11 bits): Science_v9, I_v8, S_v8, Math_v7, Programming_v5, A_v5, Communication_v4, Logical_v4, E_v4, C_v4, R_v3
+  Cat_04   |       4 |    6.7% | T_Ji (7 bits): Math_v9, C_v9, Science_v7, Logical_v5, A_v4, Programming_v3, E_v3
+  Cat_05   |       4 |    6.7% | T_Ji (7 bits): I_v10, Math_v9, Science_v8, Logical_v6, S_v4, A_v3, R_v2
+  Cat_15   |       4 |    6.7% | T_Ji (7 bits): Science_v7, Programming_v6, Logical_v5, S_v4, E_v4, Communication_v3, A_v3
+  Cat_00   |       3 |    5.0% | T_Ji (7 bits): Math_v9, Logical_v6, S_v4, Programming_v3, Communication_v3, I_v3, E_v2
+  Cat_01   |       3 |    5.0% | T_Ji (7 bits): Math_v9, Science_v9, C_v9, Logical_v6, Programming_v5, Communication_v3, E_v2
+  Cat_02   |       3 |    5.0% | T_Ji (8 bits): Math_v9, C_v9, Science_v8, Logical_v6, Programming_v5, Communication_v3, I_v3, E_v1
+  Cat_07   |       3 |    5.0% | T_Ji (7 bits): Science_v9, Math_v8, Programming_v5, E_v5, R_v4, A_v3, C_v3
+  Cat_08   |       3 |    5.0% | T_Ji (7 bits): Science_v9, S_v9, Math_v7, Programming_v4, Communication_v3, Logical_v3, C_v3
+  Cat_09   |       3 |    5.0% | T_Ji (7 bits): Science_v9, S_v8, R_v4, Programming_v3, Communication_v3, Logical_v3, E_v3
+  Cat_11   |       3 |    5.0% | T_Ji (7 bits): Math_v9, R_v8, Programming_v4, S_v4, C_v4, Logical_v3, A_v3
+  Cat_12   |       3 |    5.0% | T_Ji (7 bits): Math_v8, R_v8, S_v4, C_v4, Programming_v3, Logical_v3, A_v2
+  Cat_13   |       3 |    5.0% | T_Ji (7 bits): Math_v8, Communication_v5, Programming_v4, A_v4, S_v4, C_v4, I_v3
+  Cat_16   |       3 |    5.0% | T_Ji (7 bits): C_v9, Math_v8, Science_v7, A_v6, Logical_v5, R_v4, Communication_v3
+  Cat_17   |       3 |    5.0% | T_Ji (7 bits): Science_v9, Math_v8, Programming_v6, Communication_v5, Logical_v5, R_v5, E_v4
+  Cat_18   |       3 |    5.0% | T_Ji (7 bits): S_v10, Science_v8, Math_v7, Programming_v5, Communication_v5, Logical_v3, I_v3
+  Cat_19   |       3 |    5.0% | T_Ji (7 bits): Science_v8, S_v8, Math_v7, A_v7, Communication_v5, Programming_v3, I_v3
+  Cat_20   |       3 |    5.0% | T_Ji (7 bits): S_v10, Math_v8, Programming_v5, Communication_v5, R_v5, E_v4, Logical_v3
+  Cat_06   |       2 |    3.3% | T_Ji (8 bits): I_v10, Math_v9, C_v9, Science_v7, Logical_v6, S_v5, A_v4, R_v3
+  Cat_03   |       1 |    1.7% | T_Ji (11 bits): Math_v9, C_v9, Science_v7, S_v6, Logical_v5, Programming_v4, Communication_v4, R_v4, I_v3, A_v2, E_v2
+  Cat_10   |       1 |    1.7% | T_Ji (11 bits): Science_v9, I_v8, S_v8, Math_v7, Programming_v5, A_v5, Communication_v4, Logical_v4, E_v4, C_v4, R_v3
   ... (2 micro-clusters adicionales de 1 alumno) ...
 ===========================================================================================================
 ```
@@ -262,8 +262,6 @@ Al ejecutar `python src/CarGross.py data/dataset_B.csv --rho 0.60` sobre el segu
 ### 6.3 ¿Qué significa cada columna de la tabla?
 - **`Cluster` (`Cat_00`, `Cat_03`, etc.):** Es el número de neurona (categoría) que se creó en la capa $F_2$ de la red.
 - **`Alumnos` y `% Total`:** Cuántos estudiantes quedaron agrupados dentro de ese clúster y qué porcentaje del total representan.
-- **`Coher.`:** Qué tan cerca está el perfil promedio de ese grupo respecto de la orientación vocacional teórica del modelo RIASEC (de 0% a 100%).
-- **`Orientacion Vocacional`:** La orientación profesional RIASEC que mejor coincide con las aptitudes del grupo. Para asignarla, `interpretar_cluster()` calcula el nivel promedio (del 1 al 10) del clúster en las 11 variables y busca la menor distancia matemática contra los 6 perfiles promedio calculados por `calcular_perfiles_riasec()` (`src/preparar_datos.py`) sobre los 2400 alumnos de `data/career_data.csv`. Puede haber varios clústeres de una misma carrera (por ejemplo `Cat_03` y `Cat_04` en *Ciencia de Datos*) porque representan subgrupos con matices distintos.
 - **`Prototipo T_Ji`:** Muestra **todos los bits que quedaron encendidos en `1`** en los pesos *Top-Down* ($T_{Ji}$) de esa categoría. Esos bits son exactamente las **características en las que coinciden el 100% de los alumnos de ese clúster**. Por ejemplo, en `dataset_A.csv` se ve que `Cat_03` tiene `Science_v7, Logical_v5, S_v4` mientras que `Cat_04` tiene `Science_v9, C_v9, Logical_v6, Communication_v5`, lo que permite distinguir de inmediato en qué se diferencian ambos grupos de Ciencia de Datos.
 
 ### 6.4 Comparación entre `dataset_A.csv` y `dataset_B.csv` en Distintos Niveles de Vigilancia (`--experimento`)
@@ -274,22 +272,22 @@ Al ejecutar `python src/CarGross.py --experimento`, el programa evalúa ambos da
 ===============================================================================================
   RESUMEN COMPARATIVO EXPERIMENTAL (DATASET A vs DATASET B)
 ===============================================================================================
-  Dataset        |   Rho | Proc. | Nulos | Clusters F2 | Media ||T_J|| | Coherencia | Epocas
------------------------------------------------------------------------------------------------
-  dataset_A.csv  |  0.30 |    60 |     0 |          14 |      4.64 bit |      82.8% |      3
-  dataset_A.csv  |  0.60 |    60 |     0 |          19 |      7.32 bit |      83.2% |      2
-  dataset_A.csv  |  0.85 |    60 |     0 |          59 |     10.98 bit |      78.8% |      2
-  dataset_B.csv  |  0.30 |    60 |     0 |          16 |      5.69 bit |      83.3% |      2
-  dataset_B.csv  |  0.60 |    60 |     0 |          22 |      7.82 bit |      82.7% |      2
-  dataset_B.csv  |  0.85 |    60 |     0 |          58 |     10.97 bit |      78.7% |      2
+  Dataset        |   Rho | Proc. | Nulos | Clusters F2 | Media ||T_J|| | Epocas
+---------------------------------------------------------------------------------
+  dataset_A.csv  |  0.30 |    60 |     0 |          14 |      4.64 bit |      3
+  dataset_A.csv  |  0.60 |    60 |     0 |          19 |      7.32 bit |      2
+  dataset_A.csv  |  0.85 |    60 |     0 |          59 |     10.98 bit |      2
+  dataset_B.csv  |  0.30 |    60 |     0 |          16 |      5.69 bit |      2
+  dataset_B.csv  |  0.60 |    60 |     0 |          22 |      7.82 bit |      2
+  dataset_B.csv  |  0.85 |    60 |     0 |          58 |     10.97 bit |      2
 ===============================================================================================
 ```
 
 #### Interpretación y comparación de los resultados:
 1. **Con vigilancia baja ($\rho = 0.30$ — Sub-clasificación):** La red solo exige que un alumno comparta 4 de los 11 bits activos ($\lceil 0.30 \times 11 \rceil = 4$) para entrar a un grupo. Por eso forma pocos clústeres grandes (14 en el Dataset A y 16 en el Dataset B), pero al mezclar alumnos más diversos la operación `AND` va apagando bits y los prototipos $T_{Ji}$ se erosionan a un promedio de **4.64 bits** (Dataset A) y **5.69 bits** (Dataset B).
-2. **Con vigilancia intermedia ($\rho = 0.60$ — Punto de equilibrio óptimo):** La red exige al menos **7 rasgos compartidos de 11** ($\lceil 0.60 \times 11 \rceil = 7$). Ambos datasets logran un equilibrio muy consistente: se forman **19 clústeres** en el Dataset A y **22 clústeres** en el Dataset B en apenas **2 épocas**, conservando prototipos $T_{Ji}$ bien descriptivos (**7.32 y 7.82 bits activos** en promedio) y alcanzando una coherencia RIASEC superior al **82.7%** en ambos casos.
+2. **Con vigilancia intermedia ($\rho = 0.60$ — Punto de equilibrio óptimo):** La red exige al menos **7 rasgos compartidos de 11** ($\lceil 0.60 \times 11 \rceil = 7$). Ambos datasets logran un equilibrio muy consistente: se forman **19 clústeres** en el Dataset A y **22 clústeres** en el Dataset B en apenas **2 épocas**, conservando prototipos $T_{Ji}$ bien descriptivos (**7.32 y 7.82 bits activos** en promedio).
 3. **Con vigilancia alta ($\rho = 0.85$ — Sobre-clasificación):** La red exige coincidir en al menos 10 de las 11 variables ($\lceil 0.85 \times 11 \rceil = 10$). Ante una condición tan estricta, el mecanismo de *Reset* se dispara casi con cada estudiante y la red termina creando prácticamente un clúster individual por alumno (**59 categorías** para 60 alumnos en el Dataset A y **58 categorías** en el Dataset B, con $\|T_J\|_1 \approx 10.98$ bits), perdiendo capacidad de generalización.
-4. **Consistencia entre Dataset A y Dataset B:** A pesar de contener 60 alumnos completamente distintos cada uno, ambos conjuntos muestran exactamente la misma curva de comportamiento frente a $\rho$, la misma velocidad de convergencia (2 épocas en $\rho = 0.60$) y niveles de coherencia vocacional casi idénticos (**83.2% vs 82.7%**), confirmando que la red ART1 generaliza de manera estable sin sobreajustarse a una muestra en particular.
+4. **Consistencia entre Dataset A y Dataset B:** A pesar de contener 60 alumnos completamente distintos cada uno, ambos conjuntos muestran exactamente la misma curva de comportamiento frente a $\rho$, la misma velocidad de convergencia (2 épocas en $\rho = 0.60$), confirmando que la red ART1 generaliza de manera estable sin sobreajustarse a una muestra en particular.
 
 ---
 
@@ -313,7 +311,7 @@ El programa valida toda la entrada antes de entrenar. Si falta la ruta del archi
 En ART1, una fila compuesta solo por ceros ($\|X\|_1 = 0$) no activa ninguna neurona y produciría una división por cero al calcular la vigilancia ($\|S\|_1 / \|X\|_1 = 0/0$). Por eso el cargador de datos detecta automáticamente cualquier fila nula, la descarta antes de entrenar avisando en qué número de fila estaba, y continúa procesando el resto del dataset sin fallar.
 
 ### 5. ¿Por qué `dataset_A.csv` y `dataset_B.csv` no tienen la columna `Career` y cómo sabe la red a qué vocación pertenece cada clúster?
-Porque la red de Carpenter-Grossberg es un método de **aprendizaje estrictamente no supervisado**: durante el entrenamiento agrupa a los alumnos mirando únicamente sus 110 bits (`0` y `1`), sin conocer ninguna etiqueta de carrera. Recién cuando el entrenamiento termina, `CarGross.py` llama a `calcular_perfiles_riasec()` (en `src/preparar_datos.py`), que calcula el promedio de las 11 variables (en escala de bines 1 a 10) de las 6 carreras sobre los 2400 alumnos del dataset original `data/career_data.csv`, y `interpretar_cluster()` le asigna a cada clúster la orientación vocacional cuya distancia matemática sea menor.
+Porque la red de Carpenter-Grossberg es un método de **aprendizaje estrictamente no supervisado**: durante el entrenamiento agrupa a los alumnos mirando únicamente sus 110 bits (`0` y `1`), descubriendo categorías naturales a partir de sus rasgos afines sin utilizar ninguna etiqueta previa ni contaminar el agrupamiento.
 
 ---
 

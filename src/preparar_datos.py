@@ -30,29 +30,7 @@ VARIABLES = [
     ("C_score", "C", False, "RIASEC Convencional (organizacion / contable)"),
 ]
 
-NOMBRES_CARRERAS = {
-    "Software Engineer": "Ingenieria de Software (Software Engineer)",
-    "Data Scientist": "Ciencia de Datos (Data Scientist)",
-    "Doctor": "Medicina y Salud (Doctor)",
-    "Accountant": "Contaduria y Finanzas (Accountant)",
-    "Entrepreneur": "Emprendimiento y Gestion (Entrepreneur)",
-    "Teacher": "Docencia y Educacion (Teacher)",
-}
 
-
-def calcular_perfiles_riasec(ruta_crudo=None):
-    """Calcula los niveles promedio (1..10) de las 11 variables por carrera sobre career_data.csv."""
-    if ruta_crudo is None:
-        ruta_crudo = os.path.join(DATA_DIR, "career_data.csv")
-    df = pd.read_csv(ruta_crudo)
-    bines = np.column_stack([
-        np.clip(np.floor(df[col].to_numpy(dtype=float) / (10.0 if div10 else 1.0)), 0, 9) + 1.0
-        for col, _, div10, _ in VARIABLES
-    ])
-    return {
-        etiqueta: np.round(bines[df["Career"].to_numpy() == clave].mean(axis=0), 2)
-        for clave, etiqueta in NOMBRES_CARRERAS.items()
-    }
 
 
 def obtener_columnas_110():

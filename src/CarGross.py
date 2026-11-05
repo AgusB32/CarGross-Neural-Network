@@ -28,13 +28,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 if SRC_DIR not in sys.path:
     sys.path.insert(0, SRC_DIR)
 
-from preparar_datos import calcular_perfiles_riasec
-
 N_BITS = 110  # 11 variables psicometricas RIASEC/aptitud x 10 bines discretos (v1..v10)
-
-# Perfiles teoricos RIASEC (promedio de bines 1..10 por carrera sobre career_data.csv) para validacion externa
-PERFILES_RIASEC = calcular_perfiles_riasec()
-PESOS_VAR = np.array([1.5, 1.5, 4.0, 3.0, 3.0, 2.0, 2.5, 2.0, 2.5, 2.5, 2.5])
 
 MAN_PAGE = """
 ================================================================================
@@ -261,30 +255,11 @@ def cargar_csv_binario(ruta):
     return mat_int[sumas > 0], list(df.columns), idx_validos, idx_nulos, len(mat_int)
 
 
-def interpretar_cluster(t_j, columnas, sub_x):
-    """Decodifica los bines activos del prototipo T_Ji y calcula su coherencia RIASEC."""
+def interpretar_cluster(t_j, columnas):
+    """Decodifica los bines activos del prototipo T_Ji."""
     activos = [columnas[i] for i in np.where(t_j >= 0.5)[0]]
     activos.sort(key=lambda c: int(c.split("_v")[-1]) if "_v" in c else 0, reverse=True)
-    rasgos = f"T_Ji ({len(activos)} bits): " + ", ".join(activos) if activos else "Sin bits fijos"
-
-    # Nivel promedio (1..10) por variable para contrastar con la matriz teorica RIASEC
-    niveles = np.zeros(11)
-    escala = np.arange(1, 11, dtype=float)
-    for v in range(11):
-        seg = t_j[v * 10 : (v + 1) * 10]
-        if seg.sum() > 0:
-            niveles[v] = np.dot(seg, escala) / seg.sum()
-        else:
-            seg_c = sub_x[:, v * 10 : (v + 1) * 10].mean(axis=0)
-            niveles[v] = np.dot(seg_c, escala) / max(1e-9, seg_c.sum())
-
-    dists = {
-        carrera: float(np.sqrt(np.sum(PESOS_VAR * (niveles - proto) ** 2) / PESOS_VAR.sum()))
-        for carrera, proto in PERFILES_RIASEC.items()
-    }
-    vocacion = min(dists, key=dists.get)
-    coherencia = round(float(np.clip((1.0 - dists[vocacion] / 4.5) * 100.0, 50.0, 99.9)), 1)
-    return rasgos, vocacion, coherencia
+    return f"T_Ji ({len(activos)} bits): " + ", ".join(activos) if activos else "Sin bits fijos"
 
 
 def evaluar_dataset(ruta_csv, rho, L=2.0, epocas=50, salida_csv=None):
@@ -297,43 +272,38 @@ def evaluar_dataset(ruta_csv, rho, L=2.0, epocas=50, salida_csv=None):
     for j in range(red.n_categorias):
         mask = asig == j
         cant = int(np.sum(mask))
-        rasgos, voc, coh = interpretar_cluster(red.weights_td[j], cols, X[mask])
+        rasgos = interpretar_cluster(red.weights_td[j], cols)
         resumen.append({
             "cat": j,
             "alumnos": cant,
             "porc": round(cant / len(X) * 100.0, 1),
             "bits": int(np.sum(red.weights_td[j] >= 0.5)),
-            "coh": coh,
-            "vocacion": voc,
             "rasgos": rasgos,
         })
 
     media_bits = float(np.mean([r["bits"] for r in resumen])) if resumen else 0.0
-    coh_global = float(np.sum([r["coh"] * r["alumnos"] for r in resumen]) / len(X))
 
-    print("\n" + "=" * 107)
+    print("\n" + "=" * 90)
     print(f"  REPORTE EXPERIMENTAL ART1 | Dataset: {os.path.basename(ruta_csv)} | Vigilancia rho = {rho:.2f}")
-    print("=" * 107)
+    print("=" * 90)
     print(f"  Registros leidos: {total} | Nulos filtrados: {len(idx_nul)} | Procesados: {len(X)} | Epocas: {ep_usadas}")
-    print(f"  Categorias creadas en F2: {red.n_categorias} | Media ||T_J||_1: {media_bits:.1f}/11 bits | Coherencia RIASEC: {coh_global:.1f}%")
-    print("-" * 107)
-    print(f"  {'Cluster':<8} | {'Alumnos':>7} | {'% Total':>7} | {'Coher.':>7} | {'Orientacion Vocacional':<42} | {'Prototipo T_Ji'}")
-    print("-" * 107)
+    print(f"  Categorias creadas en F2: {red.n_categorias} | Media ||T_J||_1: {media_bits:.1f}/11 bits")
+    print("-" * 90)
+    print(f"  {'Cluster':<8} | {'Alumnos':>7} | {'% Total':>7} | {'Prototipo T_Ji'}")
+    print("-" * 90)
 
     for r in sorted(resumen, key=lambda x: (-x["alumnos"], x["cat"]))[:20]:
-        print(f"  Cat_{r['cat']:02d}   | {r['alumnos']:7d} | {r['porc']:6.1f}% | {r['coh']:6.1f}% | {r['vocacion']:<42} | {r['rasgos']}")
+        print(f"  Cat_{r['cat']:02d}   | {r['alumnos']:7d} | {r['porc']:6.1f}% | {r['rasgos']}")
     if len(resumen) > 20:
         print(f"  ... ({len(resumen) - 20} clusters adicionales de 1 alumno) ...")
-    print("=" * 107)
+    print("=" * 90)
 
     if salida_csv:
-        mapa_voc = {r["cat"]: r["vocacion"] for r in resumen}
         filas_out = [
             {
                 "ID_Fila": idx_val[i],
                 "Cluster_F2": f"Cat_{asig[i]:02d}",
                 "Similitud_S_X": round(float(sims[i]), 4),
-                "Orientacion_Vocacional": mapa_voc.get(int(asig[i]), ""),
             }
             for i in range(len(X))
         ]
@@ -347,7 +317,6 @@ def evaluar_dataset(ruta_csv, rho, L=2.0, epocas=50, salida_csv=None):
         "nulos": len(idx_nul),
         "categorias": red.n_categorias,
         "bits_td": round(media_bits, 2),
-        "coherencia": round(coh_global, 1),
         "epocas": ep_usadas,
     }
 
@@ -397,17 +366,17 @@ def modo_experimento(salida_csv=None):
         for r in (0.3, 0.6, 0.85):
             resultados.append(evaluar_dataset(ds, rho=r))
 
-    print("\n" + "=" * 95)
+    print("\n" + "=" * 80)
     print("  RESUMEN COMPARATIVO EXPERIMENTAL (DATASET A vs DATASET B)")
-    print("=" * 95)
-    print(f"  {'Dataset':<14} | {'Rho':>5} | {'Proc.':>5} | {'Nulos':>5} | {'Clusters F2':>11} | {'Media ||T_J||':>13} | {'Coherencia':>10} | {'Epocas':>6}")
-    print("-" * 95)
+    print("=" * 80)
+    print(f"  {'Dataset':<14} | {'Rho':>5} | {'Proc.':>5} | {'Nulos':>5} | {'Clusters F2':>11} | {'Media ||T_J||':>13} | {'Epocas':>6}")
+    print("-" * 80)
     for res in resultados:
         print(
             f"  {res['dataset']:<14} | {res['rho']:5.2f} | {res['procesados']:5d} | {res['nulos']:5d} | "
-            f"{res['categorias']:11d} | {res['bits_td']:9.2f} bit | {res['coherencia']:9.1f}% | {res['epocas']:6d}"
+            f"{res['categorias']:11d} | {res['bits_td']:9.2f} bit | {res['epocas']:6d}"
         )
-    print("=" * 95)
+    print("=" * 80)
 
     if salida_csv:
         pd.DataFrame(resultados).to_csv(salida_csv, index=False, encoding="utf-8")
