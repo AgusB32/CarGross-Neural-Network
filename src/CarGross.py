@@ -369,7 +369,7 @@ def modo_experimento(salida_csv=None):
     print("\n" + "=" * 80)
     print("  RESUMEN COMPARATIVO EXPERIMENTAL (DATASET A vs DATASET B)")
     print("=" * 80)
-    print(f"  {'Dataset':<14} | {'Rho':>5} | {'Proc.':>5} | {'Nulos':>5} | {'Clusters F2':>11} | {'Media ||T_J||':>13} | {'Epocas':>6}")
+    print(f"  {'Dataset':<14} | {'Rho':>5} | {'Proc.':>5} | {'Nulos':>5} | {'Clusters':>11} | {'Media ||T_J||':>13} | {'Epocas':>6}")
     print("-" * 80)
     for res in resultados:
         print(
